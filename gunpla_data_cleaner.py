@@ -34,5 +34,5 @@ gunpla_recs = pd.DataFrame(
 cosine_sim_array = cosine_similarity(gunpla_recs)
 cosine_sim_df = pd.DataFrame(cosine_sim_array, index=gunpla_recs.index)
 
-with open("gundam_recs.pkl", "wb") as mdl:
+with open("gundam_recommends.pkl", "wb") as mdl:
     pickle.dump(cosine_sim_df, mdl)

@@ -7,7 +7,7 @@ import numpy as np
 
 @st.cache_data
 def fetch_data():
-    return pickle.load(open("gundam_recs.pkl", "rb"))
+    return pickle.load(open("gundam_recommends.pkl", "rb"))
 
 
 def return_results(gundams: list[str], gundam_df):
