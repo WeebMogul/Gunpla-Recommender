@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 import pickle
+import numpy as np
 
 
 @st.cache_data
@@ -12,14 +13,23 @@ def fetch_data():
 def return_results(gundams: list[str], gundam_df):
 
     gundam_copy = gundam_df.copy()
+    similarities = []
+    # gundam_copy = gundam_copy.drop(gundams, axis=0)
 
-    user_copy = gundam_df.loc[gundams].mean().values.reshape(1, -1)
-    gundam_copy = gundam_copy.drop(gundams, axis=0)
+    for gundam in gundams:
+        gundam_feats = gundam_df.loc[gundam].values.reshape(1, -1)
+        gundam_remove = gundam_copy.drop(gundam, axis=0)
+        sim = cosine_similarity(gundam_feats, gundam_remove)
+        similarities.append(sim)
 
-    new_result = cosine_similarity(user_copy, gundam_copy)
+    avg_sim = np.mean(similarities, axis=0)
+
+    gundam_copy = gundam_copy.drop(gundam, axis=0)
 
     new_result_df = pd.DataFrame(
-        new_result.T, index=gundam_copy.index, columns=["Similarity Score"]
+        avg_sim.T,
+        index=gundam_copy.index,
+        columns=["Similarity Score"],
     )
     return new_result_df.sort_values(by="Similarity Score", ascending=False)[:10]
 
