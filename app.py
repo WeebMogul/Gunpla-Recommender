@@ -10,7 +10,7 @@ from PIL import Image
 
 @st.cache_data
 def fetch_data():
-    return pickle.load(open("data/gundam_recs.pkl", "rb"))
+    return pickle.load(open(r"data/gundam_recs.pkl", "rb"))
 
 
 def return_results(gundams: list[str], gundam_df):
@@ -38,20 +38,20 @@ def return_results(gundams: list[str], gundam_df):
     return new_result_df.sort_values(by="Similarity Score", ascending=False)[:10]
 
 
-def create_layout(name_image):
-    for i, col in enumerate(row1 + row2):
+# def create_layout(name_image):
+#     for i, col in enumerate(row1 + row2):
 
-        tile = col.container(height=400)
-        tile.markdown(name_image["full_name"][i][0])
+#         tile = col.container(height=400)
+#         tile.markdown(name_image["full_name"][i][0])
 
-        text_img = re.sub(r"\/revision.*", "", name_image["image_link"][i][0])
-        if name_image["image_link"][i][0] is None:
-            st.image("")
-        else:
-            im = Image.open(requests.get(text_img, stream=True).raw)
-            tile.image(im, output_format="png", width=300)
+#         text_img = re.sub(r"\/revision.*", "", name_image["image_link"][i][0])
+#         if name_image["image_link"][i][0] is None:
+#             st.image("")
+#         else:
+#             im = Image.open(requests.get(text_img, stream=True).raw)
+#             tile.image(im, output_format="png", width=300)
 
-    return tile
+#     return tile
 
 
 if __name__ == "__main__":
@@ -69,7 +69,6 @@ if __name__ == "__main__":
     selected_gundams = st.multiselect("Choose your gundam", gundam_data.full_name)
 
     if st.button("Show me some Gundams"):
-
         select_gundams = pd.DataFrame(return_results(selected_gundams, gundam_recs))
 
         select_gundam_img = gundam_data[
@@ -93,8 +92,8 @@ if __name__ == "__main__":
 
             if name_image["image_link"][i][0] is np.nan:
                 im = Image.open("data/error.png")
-                tile.image(im, output_format="png", width=450)
+                tile.image(im, output_format="png", width=350)
             else:
                 text_img = re.sub(r"\/revision.*", "", name_image["image_link"][i][0])
                 im = Image.open(requests.get(text_img, stream=True).raw)
-                tile.image(im, output_format="jpg", width=450)
+                tile.image(im, output_format="jpg", width=350)
